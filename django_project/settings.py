@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [".replit.dev", ".replit.app"]
 CSRF_TRUSTED_ORIGINS = ["https://*.replit.dev", "https://*.replit.app"]
 
 # Application definition
+AUTH_USER_MODEL = "users.User"
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'apps.core',
+    'apps.users',
 ]
 
 MIDDLEWARE = [
