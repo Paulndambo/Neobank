@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextGen Bank - Create Your Account</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #f0f9ff;
+            --text: #1e293b;
+            --light-text: #64748b;
+            --error: #ef4444;
+            --success: #10b981;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .left-panel {
+            flex: 1;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            top: -50%;
+            left: -50%;
+        }
+
+        .branding {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .features {
+            margin-top: 3rem;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon {
+            width: 2rem;
+            height: 2rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .form-description {
+            color: var(--light-text);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .input-error {
+            border-color: var(--error);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-right: 0.5rem;
+            margin-top: 0.3rem;
+        }
+
+        .checkbox-label {
+            font-size: 0.875rem;
+            color: var(--light-text);
+        }
+
+        .checkbox-label a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: var(--light-text);
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--light-text);
+            user-select: none;
+        }
+
+        .strength-meter {
+            height: 5px;
+            width: 100%;
+            background-color: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .strength-meter-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .strength-text {
+            font-size: 0.75rem;
+            color: var(--light-text);
+            margin-top: 0.25rem;
+        }
+
+        .loading {
+            position: relative;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid transparent;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes spin {
+            to { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            width: 4rem;
+            height: 4rem;
+            background-color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        /* Mobile header (only shows on mobile) */
+        .mobile-header {
+            display: none;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .mobile-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                display: none;
+            }
+
+            .mobile-header {
+                display: block;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .right-panel {
+                padding: 1rem;
+            }
+
+            .form-container {
+                padding: 1rem 0;
+            }
+
+            input {
+                padding: 0.75rem;
+            }
+
+            button {
+                padding: 0.875rem;
+            }
+        }
+
+        /* Touch-friendly improvements for mobile */
+        @media (pointer: coarse) {
+            input, button, .toggle-password {
+                min-height: 44px; /* Minimum touch target size */
+            }
+
+            .checkbox-group input {
+                min-width: 24px;
+                min-height: 24px;
+            }
+        }
+
+        /* Fix for iOS input zooming */
+        @supports (-webkit-touch-callout: none) {
+            input, select, textarea {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile header - only visible on small screens -->
+    <div class="mobile-header">
+        <div class="mobile-logo">NextGen Bank</div>
+    </div>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="branding">
+                <div class="logo">NextGen Bank</div>
+                <div class="tagline">Banking reimagined for the digital age.</div>
+                <p>Join thousands of users who are enjoying a smarter way to bank.</p>
+
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <div>No hidden fees or minimum balance requirements</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <div>Instant transfers between NextGen accounts</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <div>Smart budgeting tools and financial insights</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <div>24/7 customer support through chat or phone</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-container">
+                <form id="registration-form">
+                    <h1>Create Your Account</h1>
+                    <p class="form-description">Get started with NextGen Bank in just a few minutes.</p>
+
+                    <div class="row">
+                        <div class="col form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" name="first-name" autocomplete="given-name" required>
+                            <div class="error-message" id="first-name-error">Please enter your first name</div>
+                        </div>
+
+                        <div class="col form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" name="last-name" autocomplete="family-name" required>
+                            <div class="error-message" id="last-name-error">Please enter your last name</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" autocomplete="email" required>
+                        <div class="error-message" id="email-error">Please enter a valid email address</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+1 (123) 456-7890" required>
+                        <div class="error-message" id="phone-error">Please enter a valid phone number</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Create Password</label>
+                        <div class="password-container">
+                            <input type="password" id="password" name="password" autocomplete="new-password" required>
+                            <span class="toggle-password" id="toggle-password">Show</span>
+                        </div>
+                        <div class="strength-meter">
+                            <div class="strength-meter-fill" id="strength-meter-fill"></div>
+                        </div>
+                        <div class="strength-text" id="strength-text">Password strength</div>
+                        <div class="error-message" id="password-error">Password must be at least 8 characters long</div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label class="checkbox-label" for="terms">
+                            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="marketing" name="marketing">
+                        <label class="checkbox-label" for="marketing">
+                            I would like to receive updates about new features and promotions
+                        </label>
+                    </div>
+
+                    <button type="submit" id="submit-button">Create Account</button>
+
+                    <div class="login-link">
+                        Already have an account? <a href="#">Sign In</a>
+                    </div>
+                </form>
+
+                <div class="success-message" id="success-message">
+                    <div class="success-icon">✓</div>
+                    <h2>Account Created Successfully!</h2>
+                    <p>We've sent a verification email to your inbox. Please click the link to verify your account.</p>
+                    <p>You'll be redirected to the login page in <span id="countdown">5</span> seconds...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registration-form');
+            const passwordInput = document.getElementById('password');
+            const strengthMeter = document.getElementById('strength-meter-fill');
+            const strengthText = document.getElementById('strength-text');
+            const togglePassword = document.getElementById('toggle-password');
+            const submitButton = document.getElementById('submit-button');
+            const successMessage = document.getElementById('success-message');
+            const countdown = document.getElementById('countdown');
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.textContent = type === 'password' ? 'Show' : 'Hide';
+            });
+
+            // Password strength meter
+            passwordInput.addEventListener('input', function() {
+                const value = passwordInput.value;
+                let strength = 0;
+
+                // Length check
+                if (value.length >= 8) {
+                    strength += 25;
+                }
+
+                // Contains lowercase letters
+                if (/[a-z]/.test(value)) {
+                    strength += 25;
+                }
+
+                // Contains uppercase letters
+                if (/[A-Z]/.test(value)) {
+                    strength += 25;
+                }
+
+                // Contains numbers or special characters
+                if (/[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value)) {
+                    strength += 25;
+                }
+
+                // Update UI
+                strengthMeter.style.width = strength + '%';
+
+                // Set color based on strength
+                if (strength < 50) {
+                    strengthMeter.style.backgroundColor = '#ef4444';
+                    strengthText.textContent = 'Weak password';
+                } else if (strength < 75) {
+                    strengthMeter.style.backgroundColor = '#eab308';
+                    strengthText.textContent = 'Moderate password';
+                } else {
+                    strengthMeter.style.backgroundColor = '#10b981';
+                    strengthText.textContent = 'Strong password';
+                }
+            });
+
+            // Form validation
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // First name validation
+                const firstName = document.getElementById('first-name');
+                const firstNameError = document.getElementById('first-name-error');
+                if (!firstName.value.trim()) {
+                    firstName.classList.add('input-error');
+                    firstNameError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    firstName.classList.remove('input-error');
+                    firstNameError.style.display = 'none';
+                }
+
+                // Last name validation
+                const lastName = document.getElementById('last-name');
+                const lastNameError = document.getElementById('last-name-error');
+                if (!lastName.value.trim()) {
+                    lastName.classList.add('input-error');
+                    lastNameError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    lastName.classList.remove('input-error');
+                    lastNameError.style.display = 'none';
+                }
+
+                // Email validation
+                const email = document.getElementById('email');
+                const emailError = document.getElementById('email-error');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email.value)) {
+                    email.classList.add('input-error');
+                    emailError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    email.classList.remove('input-error');
+                    emailError.style.display = 'none';
+                }
+
+                // Phone validation
+                const phone = document.getElementById('phone');
+                const phoneError = document.getElementById('phone-error');
+                const phoneRegex = /^\+?[0-9\s\-\(\)]{10,}$/;
+                if (!phoneRegex.test(phone.value)) {
+                    phone.classList.add('input-error');
+                    phoneError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    phone.classList.remove('input-error');
+                    phoneError.style.display = 'none';
+                }
+
+                // Password validation
+                const password = document.getElementById('password');
+                const passwordError = document.getElementById('password-error');
+                if (password.value.length < 8) {
+                    password.classList.add('input-error');
+                    passwordError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    password.classList.remove('input-error');
+                    passwordError.style.display = 'none';
+                }
+
+                // Submit form if valid
+                if (isValid) {
+                    submitButton.classList.add('loading');
+                    submitButton.textContent = 'Creating Account...';
+
+                    // Simulate API call
+                    setTimeout(function() {
+                        form.style.display = 'none';
+                        successMessage.style.display = 'block';
+
+                        // Countdown timer
+                        let seconds = 5;
+                        const timer = setInterval(function() {
+                            seconds--;
+                            countdown.textContent = seconds;
+
+                            if (seconds <= 0) {
+                                clearInterval(timer);
+                                // In a real app, redirect to login page here
+                                alert('Redirecting to login page...');
+                            }
+                        }, 1000);
+                    }, 2000);
+                } else {
+                    // Scroll to the first error
+                    const firstError = document.querySelector('.input-error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
