@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextGen Bank - OTP Verification</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #f0f9ff;
+            --text: #1e293b;
+            --light-text: #64748b;
+            --error: #ef4444;
+            --success: #10b981;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .left-panel {
+            flex: 1;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            top: -50%;
+            left: -50%;
+        }
+
+        .branding {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .secure-banking {
+            margin-top: 3rem;
+        }
+
+        .secure-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .secure-icon {
+            width: 2rem;
+            height: 2rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .form-description {
+            color: var(--light-text);
+            margin-bottom: 2rem;
+        }
+
+        .user-email {
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .otp-inputs input {
+            width: 3.5rem;
+            height: 4rem;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            outline: none;
+            -moz-appearance: textfield;
+            appearance: textfield;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .otp-inputs input::-webkit-outer-spin-button,
+        .otp-inputs input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .otp-inputs input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .otp-inputs.error input {
+            border-color: var(--error);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .timer {
+            font-size: 0.875rem;
+            color: var(--light-text);
+        }
+
+        .timer-count {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .resend-btn:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+
+        .resend-btn:disabled {
+            color: var(--light-text);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:disabled {
+            background-color: var(--border);
+            cursor: not-allowed;
+            color: var(--light-text);
+        }
+
+        .back-option {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: var(--light-text);
+        }
+
+        .back-option a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-option a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            position: relative;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid transparent;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes spin {
+            to { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            width: 4rem;
+            height: 4rem;
+            background-color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .error-icon {
+            width: 4rem;
+            height: 4rem;
+            background-color: var(--error);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .failure-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Mobile header (only shows on mobile) */
+        .mobile-header {
+            display: none;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .mobile-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                display: none;
+            }
+
+            .mobile-header {
+                display: block;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .right-panel {
+                padding: 1rem;
+            }
+
+            .form-container {
+                padding: 1rem 0;
+            }
+
+            .otp-inputs input {
+                width: 2.75rem;
+                height: 3.5rem;
+                font-size: 1.25rem;
+            }
+
+            button {
+                padding: 0.875rem;
+            }
+        }
+
+        /* Touch-friendly improvements for mobile */
+        @media (pointer: coarse) {
+            button, .resend-btn {
+                min-height: 44px; /* Minimum touch target size */
+            }
+
+            .otp-inputs input {
+                min-width: 44px;
+                min-height: 44px;
+            }
+        }
+
+        /* Fix for iOS input zooming */
+        @supports (-webkit-touch-callout: none) {
+            input, select, textarea {
+                font-size: 16px;
+            }
+        }
+        input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile header - only visible on small screens -->
+    <div class="mobile-header">
+        <div class="mobile-logo">NextGen Bank</div>
+    </div>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="branding">
+                <div class="logo">NextGen Bank</div>
+                <div class="tagline">Security is our priority</div>
+                <p>Protecting your financial future with advanced security measures.</p>
+
+                <div class="secure-banking">
+                    <div class="secure-feature">
+                        <div class="secure-icon">🔒</div>
+                        <div>Two-factor authentication for added security</div>
+                    </div>
+                    <div class="secure-feature">
+                        <div class="secure-icon">🛡️</div>
+                        <div>End-to-end encryption for all transactions</div>
+                    </div>
+                    <div class="secure-feature">
+                        <div class="secure-icon">👁️</div>
+                        <div>Real-time fraud monitoring and alerts</div>
+                    </div>
+                    <div class="secure-feature">
+                        <div class="secure-icon">🔐</div>
+                        <div>Biometric authentication options</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-container">
+                <form id="otp-form" method="POST" action="{% url 'verify-otp' %}">
+                    {% csrf_token %}
+                    <h1>Verify Your Account</h1>
+                    <p class="form-description">We've sent a 6-digit verification code to <span class="user-email">j*****@example.com</span></p>
+
+                    <div class="form-group">
+                        <label style="font-weight: bold;">Enter verification code</label>
+
+                            <input type="text" id="otp" name="otp" placeholder="123 456" required minlength="6" maxlength="6">
+
+                        <div class="error-message" id="otp-error">Invalid verification code. Please try again.</div>
+                    </div>
+
+                    <div class="timer-container">
+                        <div class="timer">Code expires in <span class="timer-count" id="timer">01:00</span></div>
+                        <button type="button" class="resend-btn" id="resend-btn" disabled>Resend Code</button>
+                    </div>
+
+                    <button type="submit" id="verify-button">Verify</button>
+
+                    <div class="back-option">
+                        <a href="#">Use a different email address</a>
+                    </div>
+                </form>
+
+                <div class="success-message" id="success-message">
+                    <div class="success-icon">✓</div>
+                    <h2>Verification Successful!</h2>
+                    <p>Your account has been verified successfully.</p>
+                    <p>Redirecting to your dashboard...</p>
+                </div>
+
+                <div class="failure-message" id="failure-message">
+                    <div class="error-icon">✕</div>
+                    <h2>Verification Failed</h2>
+                    <p>The code you entered is invalid or has expired.</p>
+                    <p>Please try again or request a new code.</p>
+                    <button id="retry-button" style="margin-top: 1.5rem;">Try Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const otpForm = document.getElementById('otp-form');
+            const otpInput = document.getElementById('otp');
+            const verifyButton = document.getElementById('verify-button');
+            const resendButton = document.getElementById('resend-btn');
+            const timerElement = document.getElementById('timer');
+            const successMessage = document.getElementById('success-message');
+            const failureMessage = document.getElementById('failure-message');
+            const retryButton = document.getElementById('retry-button');
+            const otpError = document.getElementById('otp-error');
+
+            // Set initial timer (60 seconds = 1 minute)
+            let timeLeft = 60;
+
+            // Function to format time as MM:
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
+
+            // Start the timer
+            function startTimer() {
+                timerElement.textContent = formatTime(timeLeft);
+                const timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerElement.textContent = formatTime(timeLeft);
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        resendButton.disabled = false;
+                    }
+                }, 1000);
+
+                return timerInterval;
+            }
+
+            // Initialize timer on page load
+            let timerInterval = startTimer();
+
+            // Handle resend button click
+            resendButton.addEventListener('click', function() {
+                // Show loading state
+                resendButton.disabled = true;
+                resendButton.classList.add('loading');
+
+                // Simulate API call for resending code
+                setTimeout(() => {
+                    // Reset timer
+                    timeLeft = 60;
+                    clearInterval(timerInterval);
+                    timerInterval = startTimer();
+
+                    // Reset button state
+                    resendButton.classList.remove('loading');
+
+                    // Clear OTP input field
+                    otpInput.value = '';
+
+                    // Hide any error messages
+                    otpError.style.display = 'none';
+                }, 1500); // Simulate 1.5 second loading time
+            });
+
+            // Form submission handler
+            /*
+            otpForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Validate input
+                const otpValue = otpInput.value.trim();
+                if (otpValue.length !== 6 || !/^\d+$/.test(otpValue)) {
+                    otpError.style.display = 'block';
+                    return;
+                }
+
+                // Show loading state
+                verifyButton.classList.add('loading');
+                verifyButton.disabled = true;
+
+                // Simulate verification process with random success/failure
+                setTimeout(() => {
+                    const isSuccess = Math.random() > 0.3; // 70% success rate for demo
+
+                    if (isSuccess) {
+                        // Show success message
+                        otpForm.style.display = 'none';
+                        successMessage.style.display = 'block';
+
+                        // Simulate redirect after success
+                        setTimeout(() => {
+                            window.location.href = "{% url 'index' %}";
+                            // But for demo purposes we'll just simulate it
+                            console.log('Redirecting to dashboard...');
+                        }, 3000);
+                    } else {
+                        // Show failure message
+                        otpForm.style.display = 'none';
+                        failureMessage.style.display = 'block';
+                    }
+                }, 2000); // Simulate 2 second verification time
+            });
+            */
+
+            // Retry button handler
+            retryButton.addEventListener('click', function() {
+                otpForm.style.display = 'block';
+                failureMessage.style.display = 'none';
+                otpInput.value = '';
+                verifyButton.disabled = false;
+                verifyButton.classList.remove('loading');
+                otpError.style.display = 'none';
+            });
+
+            // Improve UX by auto-focusing OTP input
+            otpInput.focus();
+        });
+    </script>
+</body>
+</html>
