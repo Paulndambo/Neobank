@@ -1,0 +1,468 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Table Styles */
+    .table-responsive {
+        margin-top: 1rem;
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .table {
+        margin-bottom: 0;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table thead th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        color: #495057;
+        font-weight: 600;
+        padding: 1rem;
+        text-align: left;
+        font-size: 0.875rem;
+        white-space: nowrap;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #dee2e6;
+        transition: background-color 0.2s;
+    }
+
+    .table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+        color: #212529;
+    }
+
+    /* Badge Styles */
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        font-size: 0.75rem;
+        border-radius: 0.25rem;
+        display: inline-block;
+        line-height: 1;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    /* Button Styles in Tables */
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: 0.2rem;
+        margin-right: 0.25rem;
+    }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: white;
+    }
+
+    .btn-outline-secondary {
+        border: 1px solid #6c757d;
+        color: #6c757d;
+        background: transparent;
+    }
+
+    /* Text Colors */
+    .text-success {
+        color: #28a745;
+    }
+
+    .text-danger {
+        color: #dc3545;
+    }
+
+    .text-warning {
+        color: #ffc107;
+    }
+
+    .text-primary {
+        color: #0d6efd;
+    }
+
+    /* Icons in Tables */
+    .fas {
+        margin-right: 0.5rem;
+    }
+
+    /* Filter Styles */
+    .filter-section {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .filter-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: #495057;
+    }
+    
+    .filter-group select,
+    .filter-group input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+    }
+    
+    .filter-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+    
+    /* Pagination Styles */
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .pagination li {
+        margin: 0 0.25rem;
+    }
+    
+    .pagination a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 2rem;
+        min-width: 2rem;
+        padding: 0 0.5rem;
+        border-radius: 0.25rem;
+        text-decoration: none;
+        color: #495057;
+        border: 1px solid #dee2e6;
+        transition: all 0.2s;
+    }
+    
+    .pagination a:hover {
+        background-color: #e9ecef;
+    }
+    
+    .pagination .active a {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+    
+    .pagination-info {
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+
+    /* Responsive Table */
+    @media (max-width: 768px) {
+        .table-responsive {
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .table thead {
+            display: none;
+        }
+
+        .table tbody tr {
+            display: block;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table td {
+            display: block;
+            padding: 0.5rem 0;
+            border: none;
+        }
+
+        .table td:before {
+            content: attr(data-label);
+            font-weight: 600;
+            display: inline-block;
+            width: 120px;
+        }
+        
+        .filter-row {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .filter-group {
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- Loan Portfolio Summary Section -->
+
+<!-- Main Dashboard Sections -->
+<div class="dashboard-grid">
+    <!-- Recent Loan Activities Section -->
+    <!-- Loan Applications Section -->
+    <section class="overview-section">
+        <div class="section-header">
+            <h2 class="section-title">Loans</h2>
+            <button class="btn btn-sm btn-outline">Export</button>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <form method="get" action="">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="loan_type">Loan Type</label>
+                        <select id="loan_type" name="loan_type" class="form-select">
+                            <option value="">All Types</option>
+                            <option value="personal">Personal Loan</option>
+                            <option value="business">Business Loan</option>
+                            <option value="mortgage">Mortgage</option>
+                            <option value="auto">Auto Loan</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="review">Under Review</option>
+                            <option value="awaiting">Awaiting Documents</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="amount_min">Min Amount</label>
+                        <input type="number" id="amount_min" name="amount_min" placeholder="Min $" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label for="amount_max">Max Amount</label>
+                        <input type="number" id="amount_max" name="amount_max" placeholder="Max $" class="form-control">
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="applicant">Applicant Name</label>
+                        <input type="text" id="applicant" name="applicant" placeholder="Search by name" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label for="application_id">Application ID</label>
+                        <input type="text" id="application_id" name="application_id" placeholder="e.g. APP2024089" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label for="date_from">Date From</label>
+                        <input type="date" id="date_from" name="date_from" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label for="date_to">Date To</label>
+                        <input type="date" id="date_to" name="date_to" class="form-control">
+                    </div>
+                </div>
+                <div class="filter-buttons">
+                    <button type="button" class="btn btn-outline-secondary">Reset</button>
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Applicant</th>
+                        <th>Loan Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#APP2024089</td>
+                        <td>John Smith</td>
+                        <td>Personal Loan</td>
+                        <td>$15,000</td>
+                        <td><span class="badge badge-info">Under Review</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">Review</button>
+                            <button class="btn btn-sm btn-outline-secondary">Documents</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#APP2024090</td>
+                        <td>Sarah Johnson</td>
+                        <td>Business Loan</td>
+                        <td>$50,000</td>
+                        <td><span class="badge badge-warning">Awaiting Documents</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">Review</button>
+                            <button class="btn btn-sm btn-outline-secondary">Documents</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#APP2024091</td>
+                        <td>Michael Brown</td>
+                        <td>Mortgage</td>
+                        <td>$250,000</td>
+                        <td><span class="badge badge-success">Approved</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">View</button>
+                            <button class="btn btn-sm btn-outline-secondary">Documents</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#APP2024092</td>
+                        <td>Emily Davis</td>
+                        <td>Auto Loan</td>
+                        <td>$35,000</td>
+                        <td><span class="badge badge-danger">Rejected</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">View</button>
+                            <button class="btn btn-sm btn-outline-secondary">Documents</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Showing 1-4 of 24 entries
+            </div>
+            <ul class="pagination">
+                <li><a href="#" aria-label="Previous">&laquo;</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#" aria-label="Next">&raquo;</a></li>
+            </ul>
+            <div class="items-per-page">
+                <select class="form-select form-select-sm">
+                    <option value="10">10 per page</option>
+                    <option value="25">25 per page</option>
+                    <option value="50">50 per page</option>
+                    <option value="100">100 per page</option>
+                </select>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Collection Tasks Section - Moved outside dashboard-grid -->
+
+{% endblock %}
+
+<!-- Add Chart.js library and custom script at the end of the file -->
+{% block extra_js %}
+
+<style>
+    .chart-legend {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin: 0 15px;
+    }
+    
+    .legend-color {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-right: 5px;
+        border-radius: 3px;
+    }
+    
+    .legend-label {
+        font-size: 0.85rem;
+        color: #495057;
+    }
+</style>
+
+<script>
+    // Reset filters button functionality
+    document.querySelector('.filter-buttons .btn-outline-secondary').addEventListener('click', function() {
+        const form = this.closest('form');
+        const inputs = form.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.value = '';
+        });
+    });
+    
+    // Items per page change handler
+    document.querySelector('.items-per-page select').addEventListener('change', function() {
+        // Here you would typically reload the page with the new items per page parameter
+        console.log('Items per page changed to:', this.value);
+        // Example: window.location.href = updateQueryStringParameter(window.location.href, 'per_page', this.value);
+    });
+</script>
+{% endblock %}
