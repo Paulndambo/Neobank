@@ -10,3 +10,16 @@ class User(AbstractUser, AbstractBaseModel):
   address = models.CharField(max_length=255, blank=True, null=True)
   avatar = models.ImageField(upload_to='avatar', blank=True, null=True)
   role = models.CharField(max_length=255, blank=True, null=True)
+
+  def __str__(self):
+    return self.username
+
+
+class UserOTP(AbstractBaseModel):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  code = models.CharField(max_length=255, blank=True, null=True)
+  used = models.BooleanField(default=False)
+
+  def __str__(self):
+    return self.code
+

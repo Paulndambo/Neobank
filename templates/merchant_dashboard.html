@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Business Summary Section -->
+<section class="account-summary-section">
+    <h2 class="section-title">Business Summary</h2>
+    <div class="card-grid">
+        <div class="card primary-account">
+            <div class="card-header">
+                <h3 class="card-title">Business Account</h3>
+                <span class="card-label">Primary</span>
+            </div>
+            <div class="card-body">
+                <div class="balance">
+                    <span class="balance-label">Available Balance</span>
+                    <span class="balance-amount">$12,456.78</span>
+                </div>
+                <div class="account-number">
+                    <span class="label">Merchant ID</span>
+                    <span class="value">MER-1234567</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-outline">Withdraw</button>
+                <button class="btn btn-primary">View Statement</button>
+            </div>
+        </div>
+        <div class="card sales-summary">
+            <div class="card-header">
+                <h3 class="card-title">Today's Sales</h3>
+                <span class="card-label">Live</span>
+            </div>
+            <div class="card-body">
+                <div class="balance">
+                    <span class="balance-label">Total Sales</span>
+                    <span class="balance-amount">$1,678.90</span>
+                </div>
+                <div class="account-growth">
+                    <span class="growth-label">Orders</span>
+                    <span class="growth-value">23 today</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary">View Orders</button>
+            </div>
+        </div>
+        <div class="card performance">
+            <div class="card-header">
+                <h3 class="card-title">Performance</h3>
+                <span class="card-label">This Month</span>
+            </div>
+            <div class="card-body">
+                <div class="balance">
+                    <span class="balance-label">Monthly Revenue</span>
+                    <span class="balance-amount">$28,765.43</span>
+                </div>
+                <div class="account-growth">
+                    <span class="growth-label">vs Last Month</span>
+                    <span class="growth-value positive">+12.4%</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-outline">View Analytics</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Actions Section -->
+<section class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="action-buttons">
+        <button class="action-btn" id="new-order">
+            <i class="fas fa-plus-circle"></i>
+            <span>New Order</span>
+        </button>
+        <button class="action-btn" id="scan-payment">
+            <i class="fas fa-qrcode"></i>
+            <span>Scan Payment</span>
+        </button>
+        <button class="action-btn" id="manage-inventory">
+            <i class="fas fa-box"></i>
+            <span>Inventory</span>
+        </button>
+        <button class="action-btn" id="generate-report">
+            <i class="fas fa-file-alt"></i>
+            <span>Reports</span>
+        </button>
+        <button class="action-btn" id="support">
+            <i class="fas fa-headset"></i>
+            <span>Support</span>
+        </button>
+    </div>
+</section>
+
+<!-- Main Dashboard Sections -->
+<div class="dashboard-grid">
+    <!-- Recent Orders Section -->
+    <section class="transactions-section">
+        <div class="section-header">
+            <h2 class="section-title">Recent Orders</h2>
+            <a href="#all-orders" class="view-all">View All</a>
+        </div>
+        <div class="transactions-list">
+            <!-- Example of an order item -->
+            <div class="transaction-item">
+                <div class="transaction-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="transaction-details">
+                    <div class="transaction-title">Order #12345</div>
+                    <div class="transaction-date">Today, 10:30 AM</div>
+                </div>
+                <div class="order-status pending">Pending</div>
+                <div class="transaction-amount">$45.67</div>
+            </div>
+            <!-- Add more order items here -->
+        </div>
+    </section>
+
+    <!-- Sales Overview Section -->
+    <section class="overview-section">
+        <div class="section-header">
+            <h2 class="section-title">Sales Overview</h2>
+            <div class="timeframe-selector">
+                <button class="timeframe-btn active" data-timeframe="week">Week</button>
+                <button class="timeframe-btn" data-timeframe="month">Month</button>
+                <button class="timeframe-btn" data-timeframe="year">Year</button>
+            </div>
+        </div>
+        <div class="overview-chart">
+            <div class="chart-container">
+                <canvas id="sales-chart"></canvas>
+            </div>
+        </div>
+        <div class="spending-categories">
+            <div class="category-item">
+                <div class="category-icon" style="background-color: #4CAF50;">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="category-details">
+                    <div class="category-name">Online Sales</div>
+                    <div class="category-bar">
+                        <div class="category-progress" style="width: 65%;"></div>
+                    </div>
+                </div>
+                <div class="category-amount">$8,350.00</div>
+            </div>
+            <div class="category-item">
+                <div class="category-icon" style="background-color: #2196F3;">
+                    <i class="fas fa-store"></i>
+                </div>
+                <div class="category-details">
+                    <div class="category-name">In-Store Sales</div>
+                    <div class="category-bar">
+                        <div class="category-progress" style="width: 35%;"></div>
+                    </div>
+                </div>
+                <div class="category-amount">$4,650.00</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inventory Alerts Section -->
+    <section class="alerts-section">
+        <div class="section-header">
+            <h2 class="section-title">Inventory Alerts</h2>
+            <a href="#inventory" class="view-all">View All</a>
+        </div>
+        <div class="alerts-list">
+            <div class="alert-item low-stock">
+                <div class="alert-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="alert-details">
+                    <div class="alert-title">Low Stock Alert</div>
+                    <div class="alert-description">Product ID: PRD-123 - Only 5 units left</div>
+                </div>
+                <button class="btn btn-sm">Restock</button>
+            </div>
+            <!-- Add more alert items here -->
+        </div>
+    </section>
+
+    <!-- Customer Feedback Section -->
+    <section class="feedback-section">
+        <div class="section-header">
+            <h2 class="section-title">Recent Reviews</h2>
+            <a href="#all-reviews" class="view-all">View All</a>
+        </div>
+        <div class="feedback-list">
+            <div class="feedback-item">
+                <div class="feedback-header">
+                    <div class="rating">★★★★★</div>
+                    <div class="feedback-date">2 hours ago</div>
+                </div>
+                <p class="feedback-text">"Great service and fast delivery! Will order again."</p>
+                <div class="feedback-product">Order #12340</div>
+            </div>
+            <!-- Add more feedback items here -->
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Sample data for the sales chart
+    const salesData = {
+        weekly: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            data: [1200, 1900, 1500, 2100, 1800, 2500, 2000]
+        },
+        monthly: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            data: [8500, 9200, 7800, 10500]
+        },
+        yearly: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            data: [25000, 28000, 32000, 30000, 35000, 38000, 36000, 40000, 42000, 45000, 48000, 50000]
+        }
+    };
+
+    // Initialize the sales chart
+    const ctx = document.getElementById('sales-chart').getContext('2d');
+    let currentChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: salesData.weekly.labels,
+            datasets: [{
+                label: 'Sales Revenue ($)',
+                data: salesData.weekly.data,
+                borderColor: '#2196F3',
+                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Handle timeframe button clicks
+    document.querySelectorAll('.timeframe-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update chart data based on timeframe
+            const timeframe = this.dataset.timeframe;
+            let data;
+            switch(timeframe) {
+                case 'week':
+                    data = salesData.weekly;
+                    break;
+                case 'month':
+                    data = salesData.monthly;
+                    break;
+                case 'year':
+                    data = salesData.yearly;
+                    break;
+            }
+            
+            // Update chart
+            currentChart.data.labels = data.labels;
+            currentChart.data.datasets[0].data = data.data;
+            currentChart.update();
+        });
+    });
+</script>
+{% endblock %}
