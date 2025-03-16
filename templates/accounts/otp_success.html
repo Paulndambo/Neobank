@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Successful</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #0cce6b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .checkmark {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #0cce6b;
+        }
+
+        p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 200px;
+            height: 4px;
+            background-color: #e6e9ed;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .loader-progress {
+            height: 100%;
+            width: 0%;
+            background-color: #0cce6b;
+            border-radius: 2px;
+            animation: progress 2s linear forwards;
+        }
+
+        .redirect-text {
+            font-size: 14px;
+            color: #888;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        .logo {
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Waza Bank</div>
+
+        <div class="success-icon">
+            <svg class="checkmark" viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="25" fill="none"/>
+                <path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+        </div>
+
+        <h1>Verification Successful</h1>
+        <p>Your identity has been verified successfully.</p>
+
+        <div class="loader">
+            <div class="loader-progress"></div>
+        </div>
+
+        <p class="redirect-text">Redirecting to your dashboard in <span id="timer">2</span> seconds...</p>
+    </div>
+
+    <script>
+        // Timer countdown
+        let seconds = 2;
+        const timerElement = document.getElementById('timer');
+
+        const countdown = setInterval(() => {
+            seconds--;
+            timerElement.textContent = seconds;
+
+            if (seconds <= 0) {
+                clearInterval(countdown);
+                // Replace with your actual dashboard URL
+                window.location.href = '{% url "index" %}';
+            }
+        }, 1000);
+
+        // Redirect after 2 seconds
+        setTimeout(() => {
+            window.location.href = '{% url "index" %}';
+        }, 2000);
+    </script>
+</body>
+</html>
