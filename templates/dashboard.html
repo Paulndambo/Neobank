@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finova - Digital Banking Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles and Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Main Colors */
+    --primary-color: #0066ff;
+    --primary-dark: #0050c8;
+    --primary-light: #3d85ff;
+    --secondary-color: #00d09c;
+    --secondary-dark: #00b589;
+    --secondary-light: #33e5b9;
+
+    /* Neutrals */
+    --dark: #1a2030;
+    --dark-gray: #3c4257;
+    --medium-gray: #6e7891;
+    --light-gray: #c0c5d0;
+    --ultra-light: #f5f7fa;
+    --white: #ffffff;
+
+    /* Status Colors */
+    --success: #00d09c;
+    --warning: #ffba00;
+    --danger: #ff5757;
+    --info: #0099ff;
+
+    /* Typography */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --body-font-size: 14px;
+    --small-font-size: 12px;
+    --large-font-size: 16px;
+    --title-font-size: 20px;
+    --subtitle-font-size: 18px;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    /* Border Radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-speed: 0.3s;
+
+    /* Layout */
+    --sidebar-width: 240px;
+    --sidebar-collapsed-width: 70px;
+    --header-height: 64px;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--body-font-size);
+    line-height: 1.5;
+    color: var(--dark);
+    background-color: var(--ultra-light);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* Layout Containers */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: margin-left var(--transition-speed);
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--white);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    transition: width var(--transition-speed), transform var(--transition-speed);
+    overflow-x: hidden;
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    height: var(--header-height);
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    overflow: hidden;
+}
+
+.logo {
+    max-height: 40px;
+    transition: opacity var(--transition-speed);
+}
+
+.logo-icon {
+    max-height: 40px;
+    width: 40px;
+    display: none;
+}
+
+.sidebar.collapsed .logo {
+    display: none;
+}
+
+.sidebar.collapsed .logo-icon {
+    display: block;
+}
+
+.sidebar-toggle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ultra-light);
+    color: var(--medium-gray);
+    transition: transform var(--transition-speed);
+}
+
+.sidebar.collapsed .sidebar-toggle i {
+    transform: rotate(180deg);
+}
+
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-md) 0;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.nav-item {
+    padding: 0 var(--spacing-md);
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    color: var(--dark-gray);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.nav-link:hover {
+    background-color: var(--ultra-light);
+    color: var(--primary-color);
+}
+
+.nav-item.active .nav-link {
+    background-color: var(--primary-light);
+    color: var(--white);
+}
+
+.nav-link i {
+    width: 20px;
+    text-align: center;
+    margin-right: var(--spacing-md);
+}
+
+.sidebar.collapsed .nav-text {
+    display: none;
+}
+
+.sidebar-footer {
+    padding: var(--spacing-md) 0;
+    border-top: 1px solid var(--light-gray);
+}
+
+/* Top Navbar Styles */
+.top-navbar {
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-lg);
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.page-title {
+    font-size: var(--title-font-size);
+    font-weight: 600;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.search-container {
+    position: relative;
+    width: 240px;
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    padding-right: 40px;
+    border-radius: 20px;
+    border: 1px solid var(--light-gray);
+    background-color: var(--ultra-light);
+    font-size: var(--small-font-size);
+}
+
+.search-btn {
+    position: absolute;
+    right: var(--spacing-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--medium-gray);
+}
+
+.notification-bell {
+    position: relative;
+    color: var(--medium-gray);
+    cursor: pointer;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--danger);
+    color: var(--white);
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-light);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: var(--body-font-size);
+    line-height: 1.2;
+}
+
+.user-email {
+    font-size: var(--small-font-size);
+    color: var(--medium-gray);
+}
+
+/* Dashboard Content Styles */
+.dashboard-content {
+    flex: 1;
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.section-title {
+    font-size: var(--subtitle-font-size);
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--dark);
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.card {
+    background-color: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ultra-light);
+}
+
+.card-title {
+    font-size: var(--body-font-size);
+    font-weight: 600;
+}
+
+.card-label {
+    font-size: var(--small-font-size);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--ultra-light);
+    color: var(--medium-gray);
+}
+
+.primary-account .card-label {
+    background-color: var(--primary-light);
+    color: var(--white);
+}
+
+.card-body {
+    padding: var(--spacing-md);
+}
+
+.balance {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--spacing-md);
+}
+
+.balance-label {
+    font-size: var(--small-font-size);
+    color: var(--medium-gray);
+}
+
+.balance-amount {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.account-number,
+.account-growth {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--small-font-size);
+    color: var(--medium-gray);
+}
+
+.growth-value.positive {
+    color: var(--success);
+}
+
+.growth-value.negative {
+    color: var(--danger);
+}
+
+.card-footer {
+    padding: var(--spacing-md);
+    display: flex;
+    gap: var(--spacing-md);
+    border-top: 1px solid var(--ultra-light);
+}
+
+/* Button Styles */
+.btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+    font-size: var(--body-font-size);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--small-font-size);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-outline {
+    border: 1px solid var(--light-gray);
+    color: var(--dark-gray);
+}
+
+.btn-outline:hover {
+    background-color: var(--ultra-light);
+}
+
+/* Quick Actions Section */
+.quick-actions-section {
+    margin-bottom: var(--spacing-md);
+}
+
+.action-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    padding-bottom: var(--spacing-sm);
+}
+
+.action-btn {
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-btn i {
+    font-size: 24px;
+    margin-bottom: var(--spacing-sm);
+    color: var(--primary-color);
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+}
+
+/* Section Styles */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.view-all {
+    font-size: var(--small-font-size);
+    color: var(--primary-color);
+}
+
+/* Transactions List */
+.transactions-section,
+.bills-section {
+    background-color: var(--white);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.transactions-list,
+.bills-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.transaction-item,
+.bill-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--ultra-light);
+}
+
+.transaction-item:last-child,
+.bill-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-icon,
+.bill-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--small-font-size);
+}
+
+.transaction-icon.incoming {
+    background-color: var(--success);
+    color: var(--white);
+}
+
+.transaction-icon.outgoing {
+    background-color: var(--medium-gray);
+    color: var(--white);
+}
+
+.bill-icon {
+    background-color: var(--info);
+    color: var(--white);
+}
+
+.transaction-details,
+.bill-details {
+    flex: 1;
+}
+
+.transaction-title,
+.bill-title {
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.transaction-date,
+.bill-due {
+    font-size: var(--small-font-size);
+    color: var(--medium-gray);
+}
+
+.transaction-amount {
+    font-weight: 600;
+}
+
+.transaction-amount.incoming {
+    color: var(--success);
+}
+
+.transaction-amount.outgoing {
+    color: var(--danger);
+}
+
+.bill-amount {
+    font-weight: 600;
+    margin-right: var(--spacing-md);
+}
+
+/* Financial Overview Section */
+.overview-section {
+    background-color: var(--white);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    grid-column: span 2;
+}
+
+.timeframe-selector {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.timeframe-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--small-font-size);
+    color: var(--medium-gray);
+    background-color: var(--ultra-light);
+}
+
+.timeframe-btn.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.chart-container {
+    margin: var(--spacing-md) 0;
+    height: 300px;
+}
+
+.chart-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-placeholder img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.spending-categories {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.category-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+}
+
+.category-details {
+    flex: 1;
+}
+
+.category-name {
+    font-weight: 500;
+    margin-bottom: var(--spacing-xs);
+}
+
+.category-bar {
+    height: 6px;
+    background-color: var(--ultra-light);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.category-progress {
+    height: 100%;
+    background-color: var(--primary-color);
+}
+
+.category-amount {
+    font-weight: 600;
+}
+
+/* Goals Section */
+.goals-section {
+    background-color: var(--white);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.goals-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.goal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background-color: var(--ultra-light);
+    border-radius: var(--border-radius-md);
+}
+
+.goal-info {
+    flex: 1;
+}
+
+.goal-title {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.goal-progress-container {
+    margin-bottom: var(--spacing-xs);
+}
+
+.goal-progress-bar {
+    height: 6px;
+    background-color: var(--light-gray);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: var(--spacing-xs);
+}
+
+.goal-progress {
+    height: 100%;
+    background-color: var(--secondary-color);
+}
+
+.goal-progress-text {
+    font-size: var(--small-font-size);
+    color: var(--medium-gray);
+}
+
+.goal-amounts {
+    font-size: var(--small-font-size);
+}
+
+.current-amount {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.goal-separator {
+    color: var(--medium-gray);
+    margin: 0 var(--spacing-xs);
+}
+
+.target-amount {
+    color: var(--medium-gray);
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--white);
+    border-radius: var(--border-radius-lg);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-xl);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.modal-title {
+    font-size: var(--title-font-size);
+    font-weight: 600;
+}
+
+.modal-close {
+    font-size: 24px;
+    color: var(--medium-gray);
+}
+
+.modal-body {
+    padding: var(--spacing-lg);
+}
+
+.modal-footer {
+    padding: var(--spacing-lg);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+    border-top: 1px solid var(--light-gray);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--light-gray);
+    border-radius: var(--border-radius-md);
+    font-size: var(--body-font-size);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Main Content adjustments for collapsed sidebar */
+.sidebar.collapsed + .main-content {
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+.sidebar.expanded + .main-content {
+    margin-left: var(--sidebar-width);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .overview-section {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.expanded {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+    }
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-navbar {
+        padding: 0 var(--spacing-md);
+    }
+
+    .search-container {
+        display: none;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .action-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-content {
+        padding: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-content {
+        padding: var(--spacing-sm);
+    }
+
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .card-footer {
+        flex-direction: column;
+    }
+
+    .bill-item {
+        flex-wrap: wrap;
+    }
+
+    .bill-amount {
+        width: 100%;
+        text-align: right;
+        margin-top: var(--spacing-xs);
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Section -->
+        <aside id="sidebar" class="sidebar expanded">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img id="logo-full" class="logo" src="/api/placeholder/120/40" alt="Finova Logo">
+                    <img id="logo-icon" class="logo-icon" src="/api/placeholder/40/40" alt="Finova Icon">
+                </div>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item active">
+                        <a href="#dashboard" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#accounts" class="nav-link">
+                            <i class="fas fa-wallet"></i>
+                            <span class="nav-text">Accounts</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#transactions" class="nav-link">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="nav-text">Transactions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#investments" class="nav-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="nav-text">Investments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#payments" class="nav-link">
+                            <i class="fas fa-paper-plane"></i>
+                            <span class="nav-text">Payments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#loans" class="nav-link">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span class="nav-text">Loans</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#settings" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span class="nav-text">Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#help" class="nav-link">
+                            <i class="fas fa-question-circle"></i>
+                            <span class="nav-text">Help</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#logout" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span class="nav-text">Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Section -->
+        <main class="main-content">
+            <!-- Top Navigation Bar -->
+            <header class="top-navbar">
+                <div class="navbar-left">
+                    <h1 class="page-title">Dashboard</h1>
+                </div>
+                <div class="navbar-right">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search...">
+                        <button class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <img src="/api/placeholder/40/40" alt="User Avatar" class="user-avatar">
+                        <div class="user-info">
+                            <span class="user-name">John Doe</span>
+                            <span class="user-email">john.doe@example.com</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Account Summary Section -->
+                <section class="account-summary-section">
+                    <h2 class="section-title">Account Summary</h2>
+                    <div class="card-grid">
+                        <div class="card primary-account">
+                            <div class="card-header">
+                                <h3 class="card-title">Main Account</h3>
+                                <span class="card-label">Primary</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="balance">
+                                    <span class="balance-label">Available Balance</span>
+                                    <span class="balance-amount">$12,456.78</span>
+                                </div>
+                                <div class="account-number">
+                                    <span class="label">Account Number</span>
+                                    <span class="value">**** **** 1234</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline">Transfer</button>
+                                <button class="btn btn-primary">Pay</button>
+                            </div>
+                        </div>
+                        <div class="card savings-account">
+                            <div class="card-header">
+                                <h3 class="card-title">Savings</h3>
+                                <span class="card-label">1.5% APY</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="balance">
+                                    <span class="balance-label">Available Balance</span>
+                                    <span class="balance-amount">$5,678.90</span>
+                                </div>
+                                <div class="account-growth">
+                                    <span class="growth-label">This Month</span>
+                                    <span class="growth-value">+$123.45</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline">Deposit</button>
+                                <button class="btn btn-primary">Withdraw</button>
+                            </div>
+                        </div>
+                        <div class="card investment-account">
+                            <div class="card-header">
+                                <h3 class="card-title">Investments</h3>
+                                <span class="card-label">Portfolio</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="balance">
+                                    <span class="balance-label">Total Value</span>
+                                    <span class="balance-amount">$8,765.43</span>
+                                </div>
+                                <div class="account-growth">
+                                    <span class="growth-label">Total Return</span>
+                                    <span class="growth-value positive">+15.4%</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline">View Portfolio</button>
+                                <button class="btn btn-primary">Invest More</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quick Actions Section -->
+                <section class="quick-actions-section">
+                    <h2 class="section-title">Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" id="transfer-money">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Transfer</span>
+                        </button>
+                        <button class="action-btn" id="pay-bills">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Pay Bills</span>
+                        </button>
+                        <button class="action-btn" id="mobile-topup">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Mobile Top-up</span>
+                        </button>
+                        <button class="action-btn" id="qr-payment">
+                            <i class="fas fa-qrcode"></i>
+                            <span>QR Payment</span>
+                        </button>
+                        <button class="action-btn" id="request-money">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span>Request Money</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Main Dashboard Sections -->
+                <div class="dashboard-grid">
+                    <!-- Recent Transactions Section -->
+                    <section class="transactions-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Recent Transactions</h2>
+                            <a href="#all-transactions" class="view-all">View All</a>
+                        </div>
+                        <div class="transactions-list">
+                            <div class="transaction-item">
+                                <div class="transaction-icon outgoing">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Amazon Purchase</div>
+                                    <div class="transaction-date">Today, 10:30 AM</div>
+                                </div>
+                                <div class="transaction-amount outgoing">-$45.67</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon incoming">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Salary Deposit</div>
+                                    <div class="transaction-date">Yesterday, 9:15 AM</div>
+                                </div>
+                                <div class="transaction-amount incoming">+$3,250.00</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon outgoing">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Electricity Bill</div>
+                                    <div class="transaction-date">Mar 12, 2:45 PM</div>
+                                </div>
+                                <div class="transaction-amount outgoing">-$89.99</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon outgoing">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Grocery Store</div>
+                                    <div class="transaction-date">Mar 10, 5:30 PM</div>
+                                </div>
+                                <div class="transaction-amount outgoing">-$156.32</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon incoming">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Client Payment</div>
+                                    <div class="transaction-date">Mar 8, 11:20 AM</div>
+                                </div>
+                                <div class="transaction-amount incoming">+$750.00</div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="transactions-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Recent Transactions</h2>
+                            <a href="#all-transactions" class="view-all">View All</a>
+                        </div>
+                        <div class="transactions-list">
+                            <div class="transaction-item">
+                                <div class="transaction-icon outgoing">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Amazon Purchase</div>
+                                    <div class="transaction-date">Today, 10:30 AM</div>
+                                </div>
+                                <div class="transaction-amount outgoing">-$45.67</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon incoming">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Salary Deposit</div>
+                                    <div class="transaction-date">Yesterday, 9:15 AM</div>
+                                </div>
+                                <div class="transaction-amount incoming">+$3,250.00</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon outgoing">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Electricity Bill</div>
+                                    <div class="transaction-date">Mar 12, 2:45 PM</div>
+                                </div>
+                                <div class="transaction-amount outgoing">-$89.99</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon outgoing">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Grocery Store</div>
+                                    <div class="transaction-date">Mar 10, 5:30 PM</div>
+                                </div>
+                                <div class="transaction-amount outgoing">-$156.32</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon incoming">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">Client Payment</div>
+                                    <div class="transaction-date">Mar 8, 11:20 AM</div>
+                                </div>
+                                <div class="transaction-amount incoming">+$750.00</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Financial Overview Section -->
+                    <section class="overview-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Financial Overview</h2>
+                            <div class="timeframe-selector">
+                                <button class="timeframe-btn active" data-timeframe="week">Week</button>
+                                <button class="timeframe-btn" data-timeframe="month">Month</button>
+                                <button class="timeframe-btn" data-timeframe="year">Year</button>
+                            </div>
+                        </div>
+                        <div class="overview-chart">
+                            <div class="chart-container" id="expense-chart">
+                                <!-- Chart will be inserted here with JavaScript -->
+                                <div class="chart-placeholder">
+                                    <img src="/api/placeholder/500/300" alt="Expense Chart">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="spending-categories">
+                            <div class="category-item">
+                                <div class="category-icon" style="background-color: #4CAF50;">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="category-details">
+                                    <div class="category-name">Food & Dining</div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 35%;"></div>
+                                    </div>
+                                </div>
+                                <div class="category-amount">$350.00</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-icon" style="background-color: #2196F3;">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="category-details">
+                                    <div class="category-name">Housing</div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 65%;"></div>
+                                    </div>
+                                </div>
+                                <div class="category-amount">$650.00</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-icon" style="background-color: #FF9800;">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div class="category-details">
+                                    <div class="category-name">Transportation</div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 20%;"></div>
+                                    </div>
+                                </div>
+                                <div class="category-amount">$200.00</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Upcoming Bills Section -->
+                    <section class="bills-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Upcoming Bills</h2>
+                            <a href="#all-bills" class="view-all">View All</a>
+                        </div>
+                        <div class="bills-list">
+                            <div class="bill-item">
+                                <div class="bill-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="bill-details">
+                                    <div class="bill-title">Electricity Bill</div>
+                                    <div class="bill-due">Due in 3 days</div>
+                                </div>
+                                <div class="bill-amount">$94.50</div>
+                                <button class="btn btn-sm">Pay Now</button>
+                            </div>
+                            <div class="bill-item">
+                                <div class="bill-icon">
+                                    <i class="fas fa-wifi"></i>
+                                </div>
+                                <div class="bill-details">
+                                    <div class="bill-title">Internet Bill</div>
+                                    <div class="bill-due">Due in 5 days</div>
+                                </div>
+                                <div class="bill-amount">$59.99</div>
+                                <button class="btn btn-sm">Pay Now</button>
+                            </div>
+                            <div class="bill-item">
+                                <div class="bill-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div class="bill-details">
+                                    <div class="bill-title">Phone Bill</div>
+                                    <div class="bill-due">Due in 10 days</div>
+                                </div>
+                                <div class="bill-amount">$45.00</div>
+                                <button class="btn btn-sm">Pay Now</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Financial Goals Section -->
+                    <section class="goals-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Financial Goals</h2>
+                            <button class="btn btn-sm btn-outline" id="add-goal">+ New Goal</button>
+                        </div>
+                        <div class="goals-list">
+                            <div class="goal-item">
+                                <div class="goal-info">
+                                    <h3 class="goal-title">Vacation Fund</h3>
+                                    <div class="goal-progress-container">
+                                        <div class="goal-progress-bar">
+                                            <div class="goal-progress" style="width: 65%;"></div>
+                                        </div>
+                                        <div class="goal-progress-text">65% Complete</div>
+                                    </div>
+                                    <div class="goal-amounts">
+                                        <span class="current-amount">$3,250</span>
+                                        <span class="goal-separator">/</span>
+                                        <span class="target-amount">$5,000</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm">Add Funds</button>
+                            </div>
+                            <div class="goal-item">
+                                <div class="goal-info">
+                                    <h3 class="goal-title">New Car</h3>
+                                    <div class="goal-progress-container">
+                                        <div class="goal-progress-bar">
+                                            <div class="goal-progress" style="width: 35%;"></div>
+                                        </div>
+                                        <div class="goal-progress-text">35% Complete</div>
+                                    </div>
+                                    <div class="goal-amounts">
+                                        <span class="current-amount">$7,000</span>
+                                        <span class="goal-separator">/</span>
+                                        <span class="target-amount">$20,000</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm">Add Funds</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Hidden Modals -->
+    <div class="modal" id="transfer-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Transfer Money</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Transfer form will go here -->
+                <form id="transfer-form">
+                    <div class="form-group">
+                        <label for="from-account">From Account</label>
+                        <select id="from-account" class="form-control">
+                            <option value="main">Main Account - $12,456.78</option>
+                            <option value="savings">Savings - $5,678.90</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="to-account">To Account</label>
+                        <select id="to-account" class="form-control">
+                            <option value="">Select Account</option>
+                            <option value="john">John Smith</option>
+                            <option value="jane">Jane Doe</option>
+                            <option value="new">+ Add New Recipient</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" id="amount" class="form-control" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description (Optional)</label>
+                        <input type="text" id="description" class="form-control" placeholder="What's this for?">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-transfer">Cancel</button>
+                <button class="btn btn-primary" id="confirm-transfer">Send Money</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Wait for DOM to fully load
+document.addEventListener('DOMContentLoaded', function() {
+    // ----- Sidebar Toggle Functionality -----
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const logoFull = document.getElementById('logo-full');
+    const logoIcon = document.getElementById('logo-icon');
+    const mainContent = document.querySelector('.main-content');
+
+    sidebarToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('expanded');
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
+
+        // Toggle icon orientation
+        const icon = sidebarToggle.querySelector('i');
+        if (sidebar.classList.contains('collapsed')) {
+            icon.classList.remove('fa-chevron-left');
+            icon.classList.add('fa-chevron-right');
+            logoFull.style.display = 'none';
+            logoIcon.style.display = 'block';
+        } else {
+            icon.classList.remove('fa-chevron-right');
+            icon.classList.add('fa-chevron-left');
+            logoFull.style.display = 'block';
+            logoIcon.style.display = 'none';
+        }
+    });
+
+    // ----- Navigation Menu Functionality -----
+    const navItems = document.querySelectorAll('.nav-item');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove active class from all items
+            navItems.forEach(i => i.classList.remove('active'));
+            // Add active class to clicked item
+            this.classList.add('active');
+
+            // Update page title based on selected nav item
+            const navText = this.querySelector('.nav-text').textContent;
+            document.querySelector('.page-title').textContent = navText;
+        });
+    });
+
+    // ----- Modal Functionality -----
+    const transferModal = document.getElementById('transfer-modal');
+    const transferBtn = document.getElementById('transfer-money');
+    const cancelTransfer = document.getElementById('cancel-transfer');
+    const confirmTransfer = document.getElementById('confirm-transfer');
+    const modalClose = document.querySelector('.modal-close');
+
+    // Open transfer modal
+    transferBtn.addEventListener('click', function() {
+        transferModal.classList.add('visible');
+        document.body.classList.add('modal-open');
+    });
+
+    // Close modal functions
+    function closeModal() {
+        transferModal.classList.remove('visible');
+        document.body.classList.remove('modal-open');
+        // Reset form
+        document.getElementById('transfer-form').reset();
+    }
+
+    cancelTransfer.addEventListener('click', closeModal);
+    modalClose.addEventListener('click', closeModal);
+    confirmTransfer.addEventListener('click', function() {
+        // Get form values
+        const fromAccount = document.getElementById('from-account').value;
+        const toAccount = document.getElementById('to-account').value;
+        const amount = document.getElementById('amount').value;
+
+        // Validate form
+        if (!fromAccount || !toAccount || !amount || amount <= 0) {
+            alert('Please fill in all required fields with valid values.');
+            return;
+        }
+
+        // Simulate successful transfer
+        alert('Transfer successful!');
+        closeModal();
+
+        // Add transaction to the list (for demo purposes)
+        addNewTransaction('Transfer to ' + toAccount, amount);
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === transferModal) {
+            closeModal();
+        }
+    });
+
+    // ----- Quick Action Buttons -----
+    const actionButtons = document.querySelectorAll('.action-btn');
+
+    actionButtons.forEach(button => {
+        if (button.id !== 'transfer-money') {  // Already handled above
+            button.addEventListener('click', function() {
+                alert('This feature is coming soon!');
+            });
+        }
+    });
+
+    // ----- Financial Overview Timeframe Selector -----
+    const timeframeButtons = document.querySelectorAll('.timeframe-btn');
+
+    timeframeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            timeframeButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+
+            // Update chart based on selected timeframe
+            updateChart(this.dataset.timeframe);
+        });
+    });
+
+    // ----- Add New Transaction (Demo Function) -----
+    function addNewTransaction(title, amount) {
+        const transactionsList = document.querySelector('.transactions-list');
+        const newTransaction = document.createElement('div');
+        newTransaction.className = 'transaction-item';
+
+        const isOutgoing = amount.startsWith('-');
+        const formattedAmount = isOutgoing ? amount : '+' + amount;
+
+        newTransaction.innerHTML = `
+            <div class="transaction-icon ${isOutgoing ? 'outgoing' : 'incoming'}">
+                <i class="fas fa-arrow-${isOutgoing ? 'up' : 'down'}"></i>
+            </div>
+            <div class="transaction-details">
+                <div class="transaction-title">${title}</div>
+                <div class="transaction-date">Just now</div>
+            </div>
+            <div class="transaction-amount ${isOutgoing ? 'outgoing' : 'incoming'}">${formattedAmount}</div>
+        `;
+
+        // Insert at the top of the list
+        transactionsList.insertBefore(newTransaction, transactionsList.firstChild);
+
+        // Remove the last transaction to keep the list the same length
+        const lastTransaction = transactionsList.lastElementChild;
+        if (lastTransaction) {
+            transactionsList.removeChild(lastTransaction);
+        }
+    }
+
+    // ----- Bill Payment Functionality -----
+    const payNowButtons = document.querySelectorAll('.bills-list .btn');
+
+    payNowButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const billItem = this.closest('.bill-item');
+            const billTitle = billItem.querySelector('.bill-title').textContent;
+            const billAmount = billItem.querySelector('.bill-amount').textContent;
+
+            // Show confirmation
+            if (confirm(`Pay ${billTitle} for ${billAmount}?`)) {
+                // Simulate payment
+                billItem.style.opacity = '0.5';
+                this.textContent = 'Paid';
+                this.disabled = true;
+
+                // Add transaction
+                addNewTransaction(billTitle, '-' + billAmount.substring(1));
+            }
+        });
+    });
+
+    // ----- Financial Goals Functionality -----
+    const addFundsButtons = document.querySelectorAll('.goals-list .btn');
+    const addGoalButton = document.getElementById('add-goal');
+
+    addFundsButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const goalItem = this.closest('.goal-item');
+            const goalTitle = goalItem.querySelector('.goal-title').textContent;
+            const currentAmount = goalItem.querySelector('.current-amount').textContent;
+            const targetAmount = goalItem.querySelector('.target-amount').textContent;
+
+            // Simple prompt for amount
+            const amountToAdd = prompt(`Add funds to ${goalTitle} (${currentAmount}/${targetAmount}):`);
+
+            if (amountToAdd && !isNaN(amountToAdd) && parseFloat(amountToAdd) > 0) {
+                // Update goal (for demo purposes)
+                const currentValue = parseFloat(currentAmount.replace(/[^0-9.-]+/g, ''));
+                const targetValue = parseFloat(targetAmount.replace(/[^0-9.-]+/g, ''));
+                const newValue = currentValue + parseFloat(amountToAdd);
+                const newPercentage = Math.min(100, Math.round((newValue / targetValue) * 100));
+
+                // Update UI
+                goalItem.querySelector('.current-amount').textContent = '$' + newValue.toLocaleString();
+                goalItem.querySelector('.goal-progress').style.width = newPercentage + '%';
+                goalItem.querySelector('.goal-progress-text').textContent = newPercentage + '% Complete';
+
+                // Add transaction
+                addNewTransaction(`${goalTitle} Contribution`, '-' + amountToAdd);
+
+                alert(`Successfully added $${amountToAdd} to your ${goalTitle}!`);
+            }
+        });
+    });
+
+    addGoalButton.addEventListener('click', function() {
+        alert('New goal creation feature coming soon!');
+    });
+
+    // ----- Demo Chart Placeholder Function -----
+    function updateChart(timeframe) {
+        // In a real app, this would update the chart with real data
+        // For this demo, we'll just show an alert
+        console.log(`Chart updated to show ${timeframe} data`);
+        // The chart is currently a placeholder image
+    }
+
+    // ----- Notification Bell Functionality -----
+    const notificationBell = document.querySelector('.notification-bell');
+
+    notificationBell.addEventListener('click', function() {
+        alert('You have 3 new notifications!');
+    });
+
+    // ----- Search Functionality -----
+    const searchBtn = document.querySelector('.search-btn');
+    const searchInput = document.querySelector('.search-input');
+
+    searchBtn.addEventListener('click', function() {
+        performSearch();
+    });
+
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+
+    function performSearch() {
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm) {
+            alert(`Searching for: ${searchTerm}`);
+            searchInput.value = '';
+        }
+    }
+
+    // ----- Initialize Page -----
+    // This would include loading user data, transaction history, etc.
+    // For this demo, we'll just log a message
+    console.log('Dashboard initialized successfully');
+});
+    </script>
+</body>
+</html>
